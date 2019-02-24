@@ -56,7 +56,7 @@ setup(
         'django_sftp',
     ],
     include_package_data=True,
-    install_requires=["paramiko==2.2.1", "django<2"],
+    install_requires=["paramiko==2.2.4", "django==1.11.19"],
     license="MIT",
     zip_safe=False,
     keywords='django-sftp',
