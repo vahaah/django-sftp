@@ -50,3 +50,9 @@ docs/_build
 example/db.sqlite3
 example/rsa
 example/rsa.pub
+
+.mypy_cache/
+/.nox/
+/.python-version
+/.pytype/
+/src/*.egg-info/

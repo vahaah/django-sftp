@@ -1,19 +1,14 @@
-.. complexity documentation master file, created by
-   sphinx-quickstart on Tue Jul  9 22:26:36 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. include:: ../README.rst
+   :end-before: github-only
 
-Welcome to Django SFTP Server's documentation!
-=================================================================
-
-Contents:
+.. _Contributor Guide: contributing.html
 
 .. toctree::
-   :maxdepth: 2
+   :hidden:
+   :maxdepth: 1
 
-   readme
-   installation
-   usage
+   reference
    contributing
-   authors
-   history
+   Code of Conduct <codeofconduct>
+   License <license>
+   Changelog <https://github.com/vahaah/django-sftp/releases>

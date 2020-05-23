@@ -1,29 +1,58 @@
-=============================
-Django SFTP Server
-=============================
 
-.. image:: https://badge.fury.io/py/django-sftp.svg
-    :target: https://badge.fury.io/py/django-sftp
+Django SFTP [WIP]
+===========
 
-.. image:: https://travis-ci.org/vahaah/django-sftp.svg?branch=master
-    :target: https://travis-ci.org/vahaah/django-sftp
+|Tests| |Codecov| |PyPI| |Python Version| |Read the Docs| |License| |Black| |pre-commit| |Dependabot|
 
-.. image:: https://codecov.io/gh/vahaah/django-sftp/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/vahaah/django-sftp
+.. |Tests| image:: https://github.com/vahaah/django-sftp/workflows/Tests/badge.svg
+   :target: https://github.com/vahaah/django-sftp/actions?workflow=Tests
+   :alt: Tests
+.. |Codecov| image:: https://codecov.io/gh/vahaah/django-sftp/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/vahaah/django-sftp
+   :alt: Codecov
+.. |PyPI| image:: https://img.shields.io/pypi/v/django-sftp.svg
+   :target: https://pypi.org/project/django-sftp/
+   :alt: PyPI
+.. |Python Version| image:: https://img.shields.io/pypi/pyversions/django-sftp
+   :target: https://pypi.org/project/django-sftp
+   :alt: Python Version
+.. |Read the Docs| image:: https://readthedocs.org/projects/django-sftp/badge/
+   :target: https://django-sftp.readthedocs.io/
+   :alt: Read the Docs
+.. |License| image:: https://img.shields.io/pypi/l/django-sftp
+   :target: https://opensource.org/licenses/MIT
+   :alt: License
+.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
+   :alt: Black
+.. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+   :target: https://github.com/pre-commit/pre-commit
+   :alt: pre-commit
+.. |Dependabot| image:: https://api.dependabot.com/badges/status?host=github&repo=vahaah/django-sftp
+   :target: https://dependabot.com
+   :alt: Dependabot
 
-SFTP server application that used user authentication of Django.
 
-Documentation
--------------
+Features
+--------
 
-The full documentation is at https://django-sftp.readthedocs.io.
+* TODO
 
-Quickstart
-----------
 
-Install Django SFTP Server::
+Requirements
+------------
 
-    pip install django-sftp
+* TODO
+
+
+Installation
+------------
+
+You can install *Django SFTP* via pip_ from PyPI_:
+
+.. code:: console
+
+   $ pip install django-sftp
 
 Add it to your `INSTALLED_APPS`:
 
@@ -35,42 +64,50 @@ Add it to your `INSTALLED_APPS`:
         ...
     )
 
-
 Generate RSA key
 
-.. code-block:: bash
+.. code:: console
 
-     ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -m PEM
+    $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -m PEM
 
 Run SFTP server
 
-.. code-block:: bash
+.. code:: bash
 
-     ./manage.py sftpserver :11121 -k /tmp/rsa
+    $ ./manage.py sftpserver :11121 -k /tmp/rsa
 
-Features
---------
+
+Usage
+-----
 
 * TODO
 
-Running Tests
--------------
 
-Does the code actually work?
+Contributing
+------------
 
-::
+Contributions are very welcome.
+To learn more, see the `Contributor Guide`_.
 
-    source <YOURVIRTUALENV>/bin/activate
-    (myenv) $ pip install tox
-    (myenv) $ tox
+
+License
+-------
+
+Distributed under the terms of the MIT_ license,
+*Django SFTP* is free and open source software.
+
+
+Issues
+------
+
+If you encounter any problems,
+please `file an issue`_ along with a detailed description.
+
 
 Credits
 -------
 
-Tools used in rendering this package:
-
-*  Cookiecutter_
-*  `cookiecutter-djangopackage`_
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`cookiecutter-djangopackage`: https://github.com/pydanny/cookiecutter-djangopackage
+.. _MIT: http://opensource.org/licenses/MIT
+.. _file an issue: https://github.com/vahaah/django-sftp/issues
+.. _pip: https://pip.pypa.io/
+.. _Contributor Guide: CONTRIBUTING.rst

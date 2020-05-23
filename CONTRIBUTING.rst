@@ -1,112 +1,122 @@
-============
-Contributing
-============
+Contributor Guide
+=================
 
-Contributions are welcome, and they are greatly appreciated! Every
-little bit helps, and credit will always be given. 
+Thank you for your interest in improving this project.
+This project is open-source under the `MIT license`_ and
+welcomes contributions in the form of bug reports, feature requests, and pull requests.
 
-You can contribute in many ways:
+Here is a list of important resources for contributors:
 
-Types of Contributions
-----------------------
+- `Source Code`_
+- `Documentation`_
+- `Issue Tracker`_
+- `Code of Conduct`_
 
-Report Bugs
-~~~~~~~~~~~
+.. _MIT license: https://opensource.org/licenses/MIT
+.. _Source Code: https://github.com/vahaah/django-sftp
+.. _Documentation: https://django-sftp.readthedocs.io/
+.. _Issue Tracker: https://github.com/vahaah/django-sftp/issues
 
-Report bugs at https://github.com/vahaah/django-sftp/issues.
+How to report a bug
+-------------------
 
-If you are reporting a bug, please include:
+Report bugs on the `Issue Tracker`_.
 
-* Your operating system name and version.
-* Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
+When filing an issue, make sure to answer these questions:
 
-Fix Bugs
-~~~~~~~~
+- Which operating system and Python version are you using?
+- Which version of this project are you using?
+- What did you do?
+- What did you expect to see?
+- What did you see instead?
 
-Look through the GitHub issues for bugs. Anything tagged with "bug"
-is open to whoever wants to implement it.
+The best way to get your bug fixed is to provide a test case,
+and/or steps to reproduce the issue.
 
-Implement Features
-~~~~~~~~~~~~~~~~~~
 
-Look through the GitHub issues for features. Anything tagged with "feature"
-is open to whoever wants to implement it.
+How to request a feature
+------------------------
 
-Write Documentation
-~~~~~~~~~~~~~~~~~~~
+Request features on the `Issue Tracker`_.
 
-Django SFTP Server could always use more documentation, whether as part of the 
-official Django SFTP Server docs, in docstrings, or even on the web in blog posts,
-articles, and such.
 
-Submit Feedback
-~~~~~~~~~~~~~~~
+How to set up your development environment
+------------------------------------------
 
-The best way to send feedback is to file an issue at https://github.com/vahaah/django-sftp/issues.
+You need Python 3.6+ and the following tools:
 
-If you are proposing a feature:
+- Poetry_
+- Nox_
 
-* Explain in detail how it would work.
-* Keep the scope as narrow as possible, to make it easier to implement.
-* Remember that this is a volunteer-driven project, and that contributions
-  are welcome :)
+Install the package with development requirements:
 
-Get Started!
-------------
+.. code:: console
 
-Ready to contribute? Here's how to set up `django-sftp` for local development.
+   $ poetry install
 
-1. Fork the `django-sftp` repo on GitHub.
-2. Clone your fork locally::
+You can now run an interactive Python session,
+or the command-line interface:
 
-    $ git clone git@github.com:your_name_here/django-sftp.git
+.. code:: console
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+   $ poetry run python
+   $ poetry run django-sftp
 
-    $ mkvirtualenv django-sftp
-    $ cd django-sftp/
-    $ python setup.py develop
+.. _Poetry: https://python-poetry.org/
+.. _Nox: https://nox.thea.codes/
 
-4. Create a branch for local development::
 
-    $ git checkout -b name-of-your-bugfix-or-feature
-
-   Now you can make your changes locally.
-
-5. When you're done making changes, check that your changes pass flake8 and the
-   tests, including testing other Python versions with tox::
-
-        $ flake8 django_sftp tests
-        $ python setup.py test
-        $ tox
-
-   To get flake8 and tox, just pip install them into your virtualenv. 
-
-6. Commit your changes and push your branch to GitHub::
-
-    $ git add .
-    $ git commit -m "Your detailed description of your changes."
-    $ git push origin name-of-your-bugfix-or-feature
-
-7. Submit a pull request through the GitHub website.
-
-Pull Request Guidelines
+How to test the project
 -----------------------
 
-Before you submit a pull request, check that it meets these guidelines:
+Run the full test suite:
 
-1. The pull request should include tests.
-2. If the pull request adds functionality, the docs should be updated. Put
-   your new functionality into a function with a docstring, and add the
-   feature to the list in README.rst.
-3. The pull request should work for Python 2.6, 2.7, and 3.3, and for PyPy. Check 
-   https://travis-ci.org/vahaah/django-sftp/pull_requests
-   and make sure that the tests pass for all supported Python versions.
+.. code:: console
 
-Tips
-----
+   $ nox
 
-To run a subset of tests::
+List the available Nox sessions:
 
-    $ python -m unittest tests.test_django_sftp
+.. code:: console
+
+   $ nox --list-sessions
+
+You can also run a specific Nox session.
+For example, invoke the unit test suite like this:
+
+.. code:: console
+
+   $ nox --session=tests
+
+Unit tests are located in the ``tests`` directory,
+and are written using the pytest_ testing framework.
+
+.. _pytest: https://pytest.readthedocs.io/
+
+
+How to submit changes
+---------------------
+
+Open a `pull request`_ to submit changes to this project.
+
+Your pull request needs to meet the following guidelines for acceptance:
+
+- The Nox test suite must pass without errors and warnings.
+- Include unit tests. This project maintains 100% code coverage.
+- If your changes add functionality, update the documentation accordingly.
+
+Feel free to submit early, though—we can always iterate on this.
+
+You can ensure that your changes adhere to the code style by reformatting with Black_:
+
+.. code:: console
+
+   $ nox --session=black
+
+It is recommended to open an issue before starting work on anything.
+This will allow a chance to talk it over with the owners and validate your approach.
+
+.. _pull request: https://github.com/vahaah/django-sftp/pulls
+.. _Black: https://black.readthedocs.io/
+.. github-only
+.. _Code of Conduct: CODE_OF_CONDUCT.rst
