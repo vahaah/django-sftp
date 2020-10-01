@@ -33,6 +33,7 @@ pylint = "^2.6.0"
 black = "^20.8b1"
 bandit = "^1.6.2"
 flake8 = "^3.8.3"
+nox = "^2020.8.22"
 
 [tool.poetry.scripts]
 django-sftp = "django_sftp.__main__:main"
