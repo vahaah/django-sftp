@@ -1,10 +1,13 @@
 import logging
-from typing import Any, Dict, List
+import typing
+from typing import Any
+from typing import Dict
+from typing import List
 
 import asyncssh
 from django.conf import settings
 from django.core.files.storage import get_storage_class as _get_storage_class
-from six import text_type
+from django.core.files.storage import Storage
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +19,7 @@ class StoragePatch:
 
     @classmethod
     def apply(cls, fs: Any) -> None:
-        """replace bound methods of fs."""
+        """Replace bound methods of fs."""
         logger.debug("Patching %s with %s.", fs.__class__.__name__, cls.__name__)
         fs._patch = cls
         for method_name in cls.patch_methods:
@@ -37,28 +40,39 @@ class FileSystemStoragePatch(StoragePatch):
 class StorageFS(asyncssh.SFTPServer):
     """FileSystem for bridge to Django storage."""
 
-    _cwd = None
-    storage_class = None
+    _cwd: str = ""
+    storage_class: typing.Union[None, Storage] = None
     patches: Dict[str, Any] = {"FileSystemStorage": FileSystemStoragePatch}
 
-    def apply_patch(self):
-        """apply adjustment patch for storage"""
+    def apply_patch(self) -> None:
+        """Apply adjustment patch for storage."""
         patch = self.patches.get(self.storage.__class__.__name__)
         if patch:
             patch.apply(self)
 
-    def __init__(self, chan):
+    def __init__(self, chan: asyncssh.SSHServerChannel) -> None:
+        """File System for bridge to Django storage."""
         if not self._cwd:
             self._cwd = settings.MEDIA_ROOT
         self.storage = self.get_storage()
         self.apply_patch()
         super().__init__(chan, chroot=self._cwd)
 
-    def get_storage_class(self):
+    def get_storage_class(self) -> Storage:
+        """Get storage class from django settings.
+
+        Returns:
+            Storage: Storage class.
+        """
         if self.storage_class is None:
             return _get_storage_class()
         return self.storage_class
 
-    def get_storage(self):
+    def get_storage(self) -> Storage:
+        """Get storage instance.
+
+        Returns:
+            Storage: Storage instance.
+        """
         storage_class = self.get_storage_class()
         return storage_class()

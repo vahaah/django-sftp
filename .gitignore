@@ -38,6 +38,7 @@ htmlcov
 
 # Pycharm/Intellij
 .idea
+.vscode
 
 # Complexity
 output/*.html
@@ -47,10 +48,10 @@ output/*/index.html
 docs/_build
 
 # Example project
-tests/project/db.sqlite3
-tests/project/rsa
-tests/project/rsa.pub
-tests/project/media
+tests/django_project/db.sqlite3
+tests/django_project/rsa
+tests/django_project/rsa.pub
+tests/django_project/media
 
 .mypy_cache/
 /.nox/

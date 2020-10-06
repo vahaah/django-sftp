@@ -1,4 +1,4 @@
-.. include:: ../README.rst
+.. include:: ../README.md
    :end-before: github-only
 
 .. _Contributor Guide: contributing.html

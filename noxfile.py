@@ -11,8 +11,9 @@ from nox.sessions import Session
 
 
 package = "django_sftp"
-python_versions = ["3.8", "3.7", "3.6"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests"
+python_versions = ["3.8"]
+# nox.options.sessions = "pre-commit", "safety", "mypy", "tests"
+nox.options.sessions = "pre-commit", "safety", "tests"
 locations = "src", "tests", "noxfile.py", "docs/conf.py"
 
 
@@ -137,11 +138,20 @@ def mypy(session: Session) -> None:
 
 
 @nox.session(python=python_versions)
-def tests(session: Session) -> None:
+@nox.parametrize("django", ["3.1"])
+def tests(session: Session, django: str) -> None:
     """Run the test suite."""
     args = session.posargs or ["--cov"]
     install_package(session)
-    install(session, "coverage[toml]", "pytest", "pytest-cov")
+    install(
+        session,
+        "coverage[toml]",
+        "pytest",
+        "pytest-cov",
+        "pytest-django",
+        "pytest-pythonpath",
+    )
+    session.install(f"django=={django}")
     session.run("pytest", *args)
 
 

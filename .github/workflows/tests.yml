@@ -5,24 +5,24 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8']
+        python-version: ["3.7", "3.8"]
     name: Python ${{ matrix.python-version }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-        architecture: x64
-    - name: Upgrade pip
-      run: |
-        pip install --constraint=.github/workflows/constraints.txt pip
-        pip --version
-    - name: Install Poetry
-      run: |
-        pip install --constraint=.github/workflows/constraints.txt poetry
-        poetry --version
-    - name: Install Nox
-      run: |
-        pip install --constraint=.github/workflows/constraints.txt nox
-        nox --version
-    - run: nox
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - name: Upgrade pip
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt pip
+          pip --version
+      - name: Install Poetry
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt poetry
+          poetry --version
+      - name: Install Nox
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt nox
+          nox --version
+      - run: nox

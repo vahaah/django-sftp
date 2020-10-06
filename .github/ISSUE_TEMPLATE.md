@@ -1,7 +1,7 @@
-* Django SFTP Server version:
-* Django version:
-* Python version:
-* Operating System:
+- Django SFTP Server version:
+- Django version:
+- Python version:
+- Operating System:
 
 ### Description
 
