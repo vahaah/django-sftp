@@ -45,6 +45,9 @@ sphinx = "^3.2.1"
 sphinx-autobuild = "^2020.9.1"
 typeguard = "^2.9.1"
 xdoctest = "^0.15.0"
+pytest-django = "^3.10.0"
+pytest-pythonpath = "^0.7.3"
+django-stubs = "^1.6.0"
 
 [tool.poetry.scripts]
 django-sftp = "django_sftp.__main__:main"
@@ -57,7 +60,7 @@ branch = true
 source = ["django_sftp"]
 
 [tool.coverage.report]
-fail_under = 100
+fail_under = 50
 show_missing = true
 
 [build-system]

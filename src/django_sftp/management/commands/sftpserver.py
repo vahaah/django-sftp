@@ -3,42 +3,38 @@ import os
 import sys
 
 import asyncssh
-from django.core.management.base import BaseCommand, CommandParser
+from django.core.management.base import BaseCommand
+from django.core.management.base import CommandParser
 
 from django_sftp.filesystem import StorageFS
 from django_sftp.interface import StubServer
 
 
-def handle_client(process):
-    process.stdout.write(
-        "Welcome to my SSH server, %s!\n" % process.get_extra_info("username")
-    )
-    process.exit(0)
+async def start_server(host: str, port: str, keyfile: str) -> None:
+    """Start SFTP server.
 
-
-async def start_server(host, port, keyfile):
+    Args:
+        host (str): host, eg. 0.0.0.0
+        port (str): port, eg. 21
+        keyfile (str): RSA key path.
+    """
     await asyncssh.create_server(
-        StubServer,
-        host,
-        port,
-        server_host_keys=[keyfile],
-        process_factory=handle_client,
-        sftp_factory=StorageFS,
+        StubServer, host, port, server_host_keys=[keyfile], sftp_factory=StorageFS,
     )
 
 
 class Command(BaseCommand):
+    """Django Command to start SFTP server. Runs as ./manage.py sftpserver."""
+
     help = "Start SFTP server"
 
     def add_arguments(self, parser: CommandParser) -> None:
+        """Parse django command arguments.
+
+        Args:
+            parser (CommandParser): CommandParser instance
+        """
         parser.add_argument("host_port", nargs="?")
-        parser.add_argument(
-            "-l",
-            "--level",
-            dest="level",
-            default="DEBUG",
-            help="Debug level: WARNING, INFO, DEBUG [default: %(default)s]",
-        )
         parser.add_argument(
             "-k",
             "--keyfile",
@@ -48,13 +44,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options) -> None:
+        """Django command handler."""
         os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
         # bind host and port
         host_port = options.get("host_port", "")
         host, _port = host_port.split(":", 1)
         port = int(_port)
 
-        level = options["level"]
         keyfile = options["keyfile"]
 
         loop = asyncio.get_event_loop()

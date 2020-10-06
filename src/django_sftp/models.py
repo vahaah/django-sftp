@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
+import typing
 from datetime import datetime
-from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class SFTPUserGroup(models.Model):
+    """SFTP Group DB model."""
+
     name = models.CharField(
         _("Group name"), max_length=30, null=False, blank=False, unique=True
     )
@@ -27,6 +28,8 @@ class SFTPUserGroup(models.Model):
 
 
 class SFTPUserAccount(models.Model):
+    """SFTP Account DB model."""
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE
     )
@@ -50,16 +53,23 @@ class SFTPUserAccount(models.Model):
         return f"{user}"
 
     def get_username(self) -> str:
+        """Get username or empty string."""
         try:
             user = self.user
         except ObjectDoesNotExist:
-            user = None
+            user = ""
         return user and user.username or ""
 
-    def update_last_login(self, value: datetime = None) -> None:
+    def update_last_login(self, value: typing.Union[datetime, None] = None) -> None:
+        """Update last login datetime.
+
+        Args:
+            value (typing.Union[datetime, None], optional): Custom datetime.
+        """
         self.last_login = value or timezone.now()
 
     def get_home_dir(self) -> str:
+        """Get user home directory."""
         if self.home_dir:
             directory = self.home_dir
         elif self.group and self.group.home_dir:
@@ -67,12 +77,6 @@ class SFTPUserAccount(models.Model):
         else:
             directory = settings.MEDIA_ROOT
         return directory
-
-    def has_perm(self, perm: str, path: str) -> bool:
-        return perm in self.get_perms()
-
-    def get_perms(self) -> SFTPUserGroup:
-        return self.group.permission
 
     class Meta:
         verbose_name = _("SFTP user account")
