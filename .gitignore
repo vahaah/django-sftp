@@ -47,9 +47,10 @@ output/*/index.html
 docs/_build
 
 # Example project
-example/db.sqlite3
-example/rsa
-example/rsa.pub
+tests/project/db.sqlite3
+tests/project/rsa
+tests/project/rsa.pub
+tests/project/media
 
 .mypy_cache/
 /.nox/
