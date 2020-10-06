@@ -1,8 +1,7 @@
 [flake8]
 select = B,B9,C,D,DAR,E,F,N,RST,S,W
 ignore = D100,D104,D105,D106,203,E501,W503
-exclude = .nox,.git,*/migrations/*,*/static/CACHE/*,docs,node_modules
+exclude = .nox,.git,*/migrations/*,*/static/CACHE/*,docs,node_modules,tests/*
 max-line-length = 80
 max-complexity = 10
 docstring-convention = google
-per-file-ignores = tests/*:S101
