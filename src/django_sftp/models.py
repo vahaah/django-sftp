@@ -65,10 +65,8 @@ class SFTPUserAccount(models.Model):
         elif self.group and self.group.home_dir:
             directory = self.group.home_dir
         else:
-            directory = os.path.join(
-                os.path.dirname(os.path.expanduser("~")), "{username}"
-            )
-        return directory.format(username=self.get_username())
+            directory = settings.MEDIA_ROOT
+        return directory
 
     def has_perm(self, perm: str, path: str) -> bool:
         return perm in self.get_perms()

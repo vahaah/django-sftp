@@ -1,50 +1,30 @@
-import socket
-import threading
-import time
-from typing import Dict, Any
-import paramiko
+import asyncio
+import os
+import sys
+
+import asyncssh
 from django.core.management.base import BaseCommand, CommandParser
 
+from django_sftp.filesystem import StorageFS
 from django_sftp.interface import StubServer
-from django_sftp.server import StubSFTPServer, StubSFTPServerInterface
-
-BACKLOG = 10
 
 
-class ConnHandlerThd(threading.Thread):
-    def __init__(self, conn: socket.socket, keyfile: str, *args, **kwargs) -> None:
-        super(ConnHandlerThd, self).__init__(*args, **kwargs)
-        self._conn = conn
-        self._keyfile = keyfile
-
-    def run(self) -> None:
-        host_key = paramiko.RSAKey.from_private_key_file(self._keyfile)
-        transport = paramiko.Transport(self._conn)
-        transport.add_server_key(host_key)
-        transport.set_subsystem_handler("sftp", StubSFTPServer, StubSFTPServerInterface)
-
-        server = StubServer()
-        transport.start_server(server=server)
-
-        _ = transport.accept()
-        while transport.is_active():
-            time.sleep(1)
+def handle_client(process):
+    process.stdout.write(
+        "Welcome to my SSH server, %s!\n" % process.get_extra_info("username")
+    )
+    process.exit(0)
 
 
-def start_server(host: str, port: int, keyfile: str, level: str) -> None:
-    paramiko_level = getattr(paramiko.common, level)
-    paramiko.common.logging.basicConfig(level=paramiko_level)
-
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
-    server_socket.bind((host, port))
-    server_socket.listen(BACKLOG)
-
-    while True:
-        conn, _ = server_socket.accept()
-        srv_thd = ConnHandlerThd(conn, keyfile)
-        srv_thd.setDaemon(True)
-        srv_thd.start()
+async def start_server(host, port, keyfile):
+    await asyncssh.create_server(
+        StubServer,
+        host,
+        port,
+        server_host_keys=[keyfile],
+        process_factory=handle_client,
+        sftp_factory=StorageFS,
+    )
 
 
 class Command(BaseCommand):
@@ -68,6 +48,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options) -> None:
+        os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
         # bind host and port
         host_port = options.get("host_port", "")
         host, _port = host_port.split(":", 1)
@@ -75,4 +56,12 @@ class Command(BaseCommand):
 
         level = options["level"]
         keyfile = options["keyfile"]
-        start_server(host, port, keyfile, level)
+
+        loop = asyncio.get_event_loop()
+
+        try:
+            loop.run_until_complete(start_server(host, port, keyfile))
+        except (OSError, asyncssh.Error) as exc:
+            sys.exit("Error starting server: " + str(exc))
+
+        loop.run_forever()
