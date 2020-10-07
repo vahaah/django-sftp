@@ -5,9 +5,10 @@ from typing import Dict
 from typing import List
 
 import asyncssh
-from django.conf import settings
 from django.core.files.storage import get_storage_class as _get_storage_class
 from django.core.files.storage import Storage
+
+from .mixins import UserAccountMixin
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class FileSystemStoragePatch(StoragePatch):
     patch_methods = []
 
 
-class StorageFS(asyncssh.SFTPServer):
+class StorageFS(UserAccountMixin, asyncssh.SFTPServer):
     """FileSystem for bridge to Django storage."""
 
     _cwd: str = ""
@@ -53,7 +54,7 @@ class StorageFS(asyncssh.SFTPServer):
     def __init__(self, chan: asyncssh.SSHServerChannel) -> None:
         """File System for bridge to Django storage."""
         if not self._cwd:
-            self._cwd = settings.MEDIA_ROOT
+            self._cwd = self.get_home_dir(chan._conn._username)
         self.storage = self.get_storage()
         self.apply_patch()
         super().__init__(chan, chroot=self._cwd)
