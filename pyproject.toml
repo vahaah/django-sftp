@@ -45,7 +45,7 @@ sphinx = "^3.2.1"
 sphinx-autobuild = "^2020.9.1"
 typeguard = "^2.9.1"
 xdoctest = "^0.15.0"
-pytest-django = "^3.10.0"
+pytest-django = "^4.0.0"
 pytest-pythonpath = "^0.7.3"
 django-stubs = "^1.6.0"
 
