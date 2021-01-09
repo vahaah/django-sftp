@@ -17,9 +17,9 @@ class FileSystemStorageTest(TestCase):
     def test_file_system_storage(self, channel):
         fs = StorageFS(channel)
 
-        fs.rmdir("user1".encode())
         fs.mkdir("user1".encode(), SFTPAttrs())
-        self.assertEqual(
-            fs.listdir("".encode()), [b".", b"..", b"user1", b".gitkeep"]
-        )
+        self.assertEqual(fs.listdir("".encode()), [b".", b"..", b"user1", b".gitkeep"])
 
+        fs.rmdir("user1".encode())
+
+        self.assertEqual(fs.listdir("".encode()), [b".", b"..", b".gitkeep"])
