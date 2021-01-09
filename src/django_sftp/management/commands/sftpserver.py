@@ -3,8 +3,7 @@ import os
 import sys
 
 import asyncssh
-from django.core.management.base import BaseCommand
-from django.core.management.base import CommandParser
+from django.core.management.base import BaseCommand, CommandParser
 
 from django_sftp.filesystem import StorageFS
 from django_sftp.interface import StubServer
@@ -19,7 +18,11 @@ async def start_server(host: str, port: str, keyfile: str) -> None:
         keyfile (str): RSA key path.
     """
     await asyncssh.create_server(
-        StubServer, host, port, server_host_keys=[keyfile], sftp_factory=StorageFS,
+        StubServer,
+        host,
+        port,
+        server_host_keys=[keyfile],
+        sftp_factory=StorageFS,
     )
 
 
