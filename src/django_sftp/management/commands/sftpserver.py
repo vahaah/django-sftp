@@ -9,12 +9,12 @@ from django_sftp.filesystem import StorageFS
 from django_sftp.interface import StubServer
 
 
-async def start_server(host: str, port: str, keyfile: str) -> None:
+async def start_server(host: str, port: int, keyfile: str) -> None:
     """Start SFTP server.
 
     Args:
         host (str): host, eg. 0.0.0.0
-        port (str): port, eg. 21
+        port (int): port, eg. 21
         keyfile (str): RSA key path.
     """
     await asyncssh.create_server(

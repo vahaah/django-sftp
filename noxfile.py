@@ -6,8 +6,8 @@ from typing import Any
 import nox
 from nox.sessions import Session
 
-# nox.options.sessions = "lint", "safety", "mypy", "tests"
-nox.options.sessions = "lint", "safety", "tests"
+package = "django_sftp"
+nox.options.sessions = "lint", "safety", "mypy", "tests"
 locations = "src", "tests", "noxfile.py", "docs/conf.py"
 
 
@@ -86,7 +86,8 @@ def safety(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or locations
-    install_with_constraints(session, "mypy")
+    session.run("poetry", "install", "--no-dev", external=True)
+    install_with_constraints(session, "mypy", "django-stubs")
     session.run("mypy", *args)
 
 

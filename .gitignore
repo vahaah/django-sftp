@@ -51,7 +51,8 @@ docs/_build
 tests/django_project/db.sqlite3
 tests/django_project/rsa
 tests/django_project/rsa.pub
-tests/django_project/media
+tests/django_project/media/*
+!tests/django_project/media/.gitkeep
 
 .mypy_cache/
 /.nox/
