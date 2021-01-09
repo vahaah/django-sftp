@@ -18,13 +18,13 @@ class Command(BaseCommand):
         Args:
             parser (CommandParser): CommandParser instance
         """
-        parser.add_argument("name")
-        parser.add_argument("home_dir", nargs="?")
+        parser.add_argument("name", type=str)
+        parser.add_argument("home_dir", type=str, nargs="?")
 
     def handle(self, *args, **options) -> None:
         """Django command handler."""
-        name = options.get("name")
-        home_dir = options.get("home_dir")
+        name: str = options.get("name", "")
+        home_dir: str = options.get("home_dir", "")
 
         if SFTPUserGroup.objects.filter(name=name).exists():
             raise CommandError(f"SFTP user group {name} is already exists.")

@@ -7,6 +7,7 @@ from .compat import get_username_field
 class UserAccountMixin:
     """Mixin contains methods to works with SFTP Account."""
 
+    username = ""
     model = models.SFTPUserAccount
     username_field = get_username_field()
 

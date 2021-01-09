@@ -47,7 +47,7 @@ class SFTPUserAccount(models.Model):
 
     def __str__(self) -> str:
         try:
-            user = self.user
+            user = self.user.username
         except ObjectDoesNotExist:
             user = ""
         return f"{user}"
@@ -55,10 +55,10 @@ class SFTPUserAccount(models.Model):
     def get_username(self) -> str:
         """Get username or empty string."""
         try:
-            user = self.user
+            user = self.user.username
         except ObjectDoesNotExist:
             user = ""
-        return user and user.username or ""
+        return user
 
     def update_last_login(self, value: typing.Union[datetime, None] = None) -> None:
         """Update last login datetime.

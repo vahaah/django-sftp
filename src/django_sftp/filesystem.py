@@ -1,12 +1,10 @@
 import logging
-import typing
-from typing import Any
-from typing import Dict
-from typing import List
+import os
+from typing import Any, Dict, List, NoReturn, Optional, Type
 
 import asyncssh
-from django.core.files.storage import get_storage_class as _get_storage_class
 from django.core.files.storage import Storage
+from django.core.files.storage import get_storage_class as _get_storage_class
 
 from .mixins import UserAccountMixin
 
@@ -17,6 +15,8 @@ class StoragePatch:
     """Base class for patches to StorageFS."""
 
     patch_methods: List[str] = []
+
+    storage: Storage
 
     @classmethod
     def apply(cls, fs: Any) -> None:
@@ -35,14 +35,43 @@ class StoragePatch:
 class FileSystemStoragePatch(StoragePatch):
     """StoragePatch for Django's FileSystemStorage."""
 
-    patch_methods = []
+    patch_methods = ["mkdir", "rmdir", "stat"]
+
+    def mkdir(self, path: bytes, attrs: asyncssh.SFTPAttrs) -> None:
+        """The `mkdir` for `FileSystemStorage` implements method with `os.mkdir`.
+
+        Args:
+            path (bytes): path as bytes
+            attrs (asyncssh.SFTPAttrs): SFTP attrs
+        """
+        mode = 0o777 if attrs.permissions is None else attrs.permissions
+        os.mkdir(self.storage.path(path.decode()), mode)
+
+    def rmdir(self, path: bytes) -> None:
+        """The `rmdir` for `FileSystemStorage` implements method with `os.rmdir`.
+
+        Args:
+            path (bytes): path as bytes
+        """
+        os.rmdir(self.storage.path(path.decode()))
+
+    def stat(self, path: bytes) -> Any:
+        """The `stat` for `FileSystemStorage` implements method with `os.stat`.
+
+        Args:
+            path (bytes): path as bytes
+
+        Returns:
+            return os.stat object
+        """
+        return os.stat(self.storage.path(path.decode()))
 
 
 class StorageFS(UserAccountMixin, asyncssh.SFTPServer):
     """FileSystem for bridge to Django storage."""
 
     _cwd: str = ""
-    storage_class: typing.Union[None, Storage] = None
+    storage_class: Optional[Type[Storage]] = None
     patches: Dict[str, Any] = {"FileSystemStorage": FileSystemStoragePatch}
 
     def apply_patch(self) -> None:
@@ -59,7 +88,7 @@ class StorageFS(UserAccountMixin, asyncssh.SFTPServer):
         self.apply_patch()
         super().__init__(chan, chroot=self._cwd)
 
-    def get_storage_class(self) -> Storage:
+    def get_storage_class(self) -> Type[Storage]:
         """Get storage class from django settings.
 
         Returns:
@@ -77,3 +106,31 @@ class StorageFS(UserAccountMixin, asyncssh.SFTPServer):
         """
         storage_class = self.get_storage_class()
         return storage_class()
+
+    def listdir(self, path: bytes) -> List[bytes]:
+        """The `listdir` for `StorageFS` implements method with `storage.listdir`.
+
+        Args:
+            path (bytes): path as bytes
+
+        Returns:
+            return List[bytes]
+        """
+        directories, files = self.storage.listdir(path.decode())
+        return (
+            [b".", b".."]
+            + [name.encode() for name in directories if name]
+            + [name.encode() for name in files if name]
+        )
+
+    def mkdir(self, path: bytes, attrs: asyncssh.SFTPAttrs) -> NoReturn:
+        """The `mkdir` for StorageFS should be implemented in storage level."""
+        raise NotImplementedError
+
+    def rmdir(self, path: bytes) -> NoReturn:
+        """The `rmdir` for StorageFS should be implemented in storage level."""
+        raise NotImplementedError
+
+    def stat(self, path: bytes) -> Any:
+        """The `stat` for StorageFS should be implemented in storage level."""
+        raise NotImplementedError
